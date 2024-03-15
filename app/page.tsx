@@ -18,9 +18,6 @@ import { timeToDisp } from '@/lib/utils';
 
 
 export default function Page() {
-  console.log("workouts hej");
-  console.error( "knas!");
-
   return (
     <main className="flex min-h-screen flex-col p-6">
       <div className="flex h-20 shrink-0 items-end rounded-lg bg-yellow-500 p-4 md:h-52">
@@ -30,23 +27,24 @@ export default function Page() {
         </p>
       </div>
       <div className="mt-1 flex grow flex-col gap-4 md:flex-row">
-        <div className="wrap flex flex-row flex- w-100 wrap justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:px-20">
-          { workouts.map((workout) => {
+        <div className="wrap flex- w-100 wrap flex flex-row justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:px-20">
+          {workouts.map((workout) => {
             return (
-              <Card>
+              <Card key={workout.name}>
                 <CardHeader>
                   <CardTitle>{workout.name}</CardTitle>
-                  <CardDescription>{workout.type}, {timeToDisp(workout.time)} </CardDescription>
+                  <CardDescription>
+                    {workout.type}, {timeToDisp(workout.time)}{' '}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {
-                  workout.excercises.map((item, index) => (
+                  {workout.excercises.map((item, index) => (
                     <span key={index}>
                       {item}
-                      {index < workout.excercises.length - 1 && (index % 2 === 0 ? ", " : ",\n")}
+                      {index < workout.excercises.length - 1 &&
+                        (index % 2 === 0 ? ', ' : ',\n')}
                     </span>
-                  ))
-                  }
+                  ))}
                 </CardContent>
                 <CardFooter className="flex justify-between">
                   <Button variant="outline">Remove</Button>
