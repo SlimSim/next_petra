@@ -3,40 +3,63 @@
 const users = [
   {
     id: '00000000-0000-0000-0000-000000000001',
-    name: 'Slim Sim',
+    name: 'Petra',
     email: 'slimsimapps@gmail.com',
     password: '123456',
   },
 ];
 
-export const workouts = [
+const workouts = [
   {
-    name: "Basic Double Workout",
+    name: 'Basic Double Workout',
     time: 645,
-    type: "Double",
-    excercises: [
-      "Crunches", "Back extensions",
-      ,"push-up", "Dive bombers",
-      ,"Side crnces", "Bear crawls",
-      ,"Jump squats", "Push-ups",
-    ]
+    type: 'Double',
+    exercises: [
+      'Crunches',
+      'Back extensions',
+      'push-up',
+      'Dive bombers',
+      'Side crnces',
+      'Bear crawls',
+      'Jump squats',
+      'Push-ups',
+    ],
   },
   {
-    name: "Quick double workout",
+    name: 'Quick double workout',
     time: 480,
-    type: "Double",
-    excercises: [
-      "The plank",
-      "Leg Raises",
-      "Lunges", 
-      "Back Extnesions",
-      "Jumping Jacks",
-      "Burpies",
-    ]
-  }
+    type: 'Double',
+    exercises: [
+      'The plank',
+      'Leg Raises',
+      'Lunges',
+      'Back Extnesions',
+      'Jumping Jacks',
+      'Burpies',
+    ],
+  },
+  {
+    name: '7-Minute Workout',
+    time: 480,
+    type: 'Single',
+    exercises: [
+      'Jumping jacks',
+      'Wall sit',
+      'Push-up',
+      'Crunch',
+      'Step-up onto chair',
+      'Squat',
+      'Triceps dip on chair',
+      'Plank',
+      'High knees running in place',
+      'Lunge',
+      'Push-up and rotation',
+      'Side plank',
+    ],
+  },
 ];
 
-
+/*
 const customers = [
   {
     id: '3958dc9e-712f-4377-85e9-fec4b6a6442a',
@@ -207,11 +230,9 @@ const revenue = [
   { month: 'Nov', revenue: 3000 },
   { month: 'Dec', revenue: 4800 },
 ];
+*/
 
 module.exports = {
   users,
   workouts,
-  customers,
-  invoices,
-  revenue,
 };
