@@ -9,10 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+
 import { Workout } from './lib/definitions';
 import { timeToDisp } from '@/lib/utils';
-import StartWorkoutButton from '@/components/special/StartWorkoutButton';
+import StartWorkoutButton from '@/components/clientComponents/startWorkoutButton';
+import BottomBar from '@/components/slimSim/bottomBar';
+import IconButton from '@/components/slimSim/iconButton';
+import { TrashIcon } from 'lucide-react';
 
 /*
 const workoutIntervals = {
@@ -29,7 +32,7 @@ export default async function Page() {
   const workouts: Workout[] = await fetchWorkouts();
 
   return (
-    <main className="flex min-h-screen flex-col p-6">
+    <main className="flex min-h-screen pb-20 flex-col p-6">
       <div className="flex h-20 shrink-0 items-end rounded-lg bg-yellow-500 p-4 md:h-52">
         <p className={`text-xl text-gray-800 md:text-3xl md:leading-normal`}>
           <strong>Welcome to Petra.</strong> Your personal trainer!
@@ -56,7 +59,7 @@ export default async function Page() {
                   ))}
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                  <Button variant="outline">Remove</Button>
+                  <IconButton icon={<TrashIcon />} >Remove</IconButton>
                   <StartWorkoutButton workout={workout} />
                 </CardFooter>
               </Card>
@@ -64,12 +67,8 @@ export default async function Page() {
           })}
         </div>
       </div>
-      <Link
-        href="/login"
-        className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
-      >
-        <span>Log in</span> <ArrowRightIcon className="w-5 md:w-6" />
-      </Link>
+
+      <BottomBar></BottomBar>
     </main>
   );
 }
