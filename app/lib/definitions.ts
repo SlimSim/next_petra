@@ -12,16 +12,6 @@ export type Workout = {
   creator?: User; 
 }
 
-let x : Workout = {
-  name: "hej",
-  time : 5,
-  type: "Single",
-  exercises: [],
-}
-
-console.log( "x", x);
-
-
 export type User = {
   id: string;
   name: string;

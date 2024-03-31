@@ -7,8 +7,35 @@ import {
   LatestInvoiceRaw,
   User,
   Revenue,
+  Workout,
 } from './definitions';
 import { formatCurrency } from './utils';
+
+export async function fetchWorkouts(): Promise<Workout[]> {
+  try {
+    const data = await sql<Workout>`SELECT * FROM PetraWrokouts`;
+
+    /*
+    const data = await sql<LatestInvoiceRaw>`
+      SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
+      FROM workout
+      JOIN customers ON invoices.customer_id = customers.id
+      ORDER BY invoices.date DESC
+      LIMIT 5`;
+      */
+    /*
+    const latestInvoices = data.rows.map((invoice) => ({
+      ...invoice,
+      amount: formatCurrency(invoice.amount),
+    }));
+    */
+    return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch the workouts.');
+  }
+}
+
 
 export async function fetchRevenue() {
   // Add noStore() here to prevent the response from being cached.

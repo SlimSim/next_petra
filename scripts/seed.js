@@ -1,13 +1,93 @@
 const { db } = require('@vercel/postgres');
-const {
-  invoices,
-  customers,
-  revenue,
-  users,
-} = require('../app/lib/placeholder-data.js');
+const { workouts, users } = require('../app/lib/placeholder-data.js');
 const bcrypt = require('bcrypt');
 
+/*
+Petra-workouts 
+Petra-users
+
+*/
+
 async function seedUsers(client) {
+  try {
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+    // Create the "users" table if it doesn't exist
+    const createTable = await client.sql`
+      CREATE TABLE IF NOT EXISTS PetraUsers (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        email TEXT NOT NULL UNIQUE,
+        password TEXT NOT NULL
+      );
+    `;
+
+    console.log(`Created "users" table`);
+
+    // Insert data into the "users" table
+    const insertedUsers = await Promise.all(
+      users.map(async (user) => {
+        const hashedPassword = await bcrypt.hash(user.password, 10);
+        return client.sql`
+        INSERT INTO PetraUsers (id, name, email, password)
+        VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
+        ON CONFLICT (id) DO NOTHING;
+      `;
+      }),
+    );
+
+    console.log(`Seeded ${insertedUsers.length} users`);
+
+    return {
+      createTable,
+      users: insertedUsers,
+    };
+  } catch (error) {
+    console.error('Error seeding users:', error);
+    throw error;
+  }
+}
+
+async function seedWorkouts(client) {
+  try {
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+    // Create the "users" table if it doesn't exist
+    const createTable = await client.sql`
+      CREATE TABLE IF NOT EXISTS PetraWrokouts (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        name TEXT NOT NULL,
+        time INT NOT NULL,
+        type TEXT NOT NULL,
+        exercises TEXT[] NOT NULL,
+        user_id UUID REFERENCES PetraUsers(id)
+      );
+    `;
+
+    console.log(`Created "PetraWrokouts" table`);
+
+    // Insert data into the "PetraWrokouts" table
+    const insertedWorkouts = await Promise.all(
+      workouts.map(async (workout) => {
+        return client.sql`
+        INSERT INTO PetraWrokouts (name, time, type, exercises, user_id)
+        VALUES (${workout.name}, ${workout.time}, ${workout.type}, ${workout.exercises}, '00000000-0000-0000-0000-000000000001')
+        ON CONFLICT (id) DO NOTHING;
+      `;
+      }),
+    );
+
+    console.log(`Seeded ${insertedWorkouts.length} PetraWrokouts`);
+
+    return {
+      createTable,
+      workouts: insertedWorkouts,
+    };
+  } catch (error) {
+    console.error('Error seeding users:', error);
+    throw error;
+  }
+}
+/*
+async function seedOldUsers(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
     // Create the "users" table if it doesn't exist
@@ -160,13 +240,16 @@ async function seedRevenue(client) {
   }
 }
 
+*/
+
 async function main() {
   const client = await db.connect();
 
-  await seedUsers(client);
-  await seedCustomers(client);
-  await seedInvoices(client);
-  await seedRevenue(client);
+  //await seedUsers(client);
+  await seedWorkouts(client);
+
+  //  await seedInvoices(client);
+  //  await seedRevenue(client);
 
   await client.end();
 }
