@@ -1,25 +1,20 @@
 'use client';
 import React from 'react';
-import { Workout } from '@/app/lib/definitions';
-import { Petra } from '@/lib/utils';
 import IconButton from '../slimSim/iconButton';
 import { PlayIcon } from 'lucide-react';
 
-const handleStartWorkout = (workout: Workout) => {
-  Petra.startWorkout(workout);
-};
-
-interface StartWorkoutButtonProps {
-  workout: Workout; // Define the prop type for workout data
+interface StartWorkoutButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  onStartWorkout: () => void;
 }
 
-const StartWorkoutButton: React.FC<StartWorkoutButtonProps> = ({ workout }) => {
+const StartWorkoutButton: React.FC<StartWorkoutButtonProps> = ({
+  onStartWorkout,
+}) => {
   return (
-    <IconButton
-      icon={<PlayIcon/>}
-      onClick={() => handleStartWorkout(workout)}>
-        Start workout!
-      </IconButton>
+    <IconButton icon={<PlayIcon />} onClick={onStartWorkout}>
+      Start workout!
+    </IconButton>
   );
 };
 

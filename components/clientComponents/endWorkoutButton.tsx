@@ -1,18 +1,21 @@
 'use client';
 import React from 'react';
-import { Petra } from '@/lib/utils';
 import IconButton from '../slimSim/iconButton';
 import { StopIcon } from '@heroicons/react/20/solid';
 
 const handleEndWorkout = () => {
-  Petra.stopWorkout();
+
 };
 
-export const EndWorkoutButton = () => {
+interface EndWorkoutBottomProps {
+  onEndWorkout: () => void;
+}
+
+export const EndWorkoutButton:React.FC<EndWorkoutBottomProps> = ({onEndWorkout}) => {
   return (
     <IconButton
       icon={<StopIcon></StopIcon>}
-      onClick={() => handleEndWorkout()} >
+      onClick={onEndWorkout} >
         Stop
         </IconButton>
   );

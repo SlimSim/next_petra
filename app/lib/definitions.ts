@@ -12,6 +12,8 @@ export type Workout = {
   creator?: User; 
 }
 
+export type Timeout = ReturnType<typeof setTimeout>;
+
 export type User = {
   id: string;
   name: string;
