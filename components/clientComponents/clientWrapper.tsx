@@ -1,7 +1,7 @@
 'use client';
 
 import { Timeout, Workout } from '@/app/lib/definitions';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -10,23 +10,21 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/card';
-import { timeToDisp } from '@/lib/utils';
+import { timeToDisp, timeToMinutes } from '@/lib/utils';
 import IconButton from '../slimSim/iconButton';
 import StartWorkoutButton from './startWorkoutButton';
 import { TrashIcon } from 'lucide-react';
 import BottomBar from '../slimSim/bottomBar';
-import { Button } from '../ui/button';
 
 interface ClientWrapperProps {
   workouts: Workout[];
 }
 
-const ClientWrapper: React.FC<ClientWrapperProps> = ({workouts}) => {
-
+const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
   const workoutIntervals = {
     // Adjust these intervals based on your desired exercise execution time:
-    headerDelay: 500,
-    exerciseDelay: 1000,
+    headerDelay: 4000,
+    exerciseDelay: 30000,
   };
 
   let [currentWorkout, setCurrentWorkout] = useState<Workout | null>(null);
@@ -36,20 +34,36 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({workouts}) => {
     stopWorkout();
     setCurrentWorkout(workout);
 
-
     sayInstruction(
-      `Lets do the ${workout.name} for ${workout.time / 60} minutes.`,
+      `Lets do the ${workout.name} for ${timeToMinutes(workout.time)} minutes.`,
     );
 
     let currentIndex = 0;
-    workoutRun(currentIndex, workout.exercises);
+    workoutRun(currentIndex, workout.exercises, workoutIntervals.headerDelay);
+  };
+
+  const workoutRun = (
+    currentIndex: number,
+    exercises: string[],
+    delay?: number,
+  ) => {
+    setCurrentTimeout(
+      setTimeout(() => {
+        if (exercises.length <= currentIndex) {
+          sayInstruction('Good work!');
+          return;
+        }
+
+        sayInstruction(exercises[currentIndex]);
+        workoutRun(currentIndex + 1, exercises);
+      }, delay || workoutIntervals.exerciseDelay),
+    );
   };
 
   const stopWorkout = () => {
     if (currentTimeout === null) {
       return;
     }
-    // Stop the current workout (if any)
 
     sayInstruction('Workout Stopped');
     clearTimeout(currentTimeout);
@@ -57,33 +71,51 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({workouts}) => {
     setCurrentTimeout(null);
   };
 
+  const preparePetra = () => {
+    if (!('speechSynthesis' in window)) {
+      console.warn('no speechSynthesis, Petra will be silent :(');
+      return;
+    }
+    speechSynthesis.getVoices();
+  };
+
   const sayInstruction = (text: string) => {
     console.log(text);
+    if (!('speechSynthesis' in window)) {
+      console.warn('Speech synthesis not supported by this browser.');
+      return;
+    }
+    speechSynthesis.cancel();
+    const voices = speechSynthesis.getVoices();
+
+    const googleVoice = voices.find(
+      (voice) => voice.name === 'Google US English',
+    );
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    if (googleVoice) {
+      utterance.voice = googleVoice;
+    } else {
+      console.error('Google US English voice not found.');
+    }
+    speechSynthesis.speak(utterance);
   };
 
-  const workoutRun = (currentIndex: number, exercises: string[]) => {
-    setCurrentTimeout(setTimeout(() => {
-      if (exercises.length <= currentIndex) {
-        sayInstruction('Good work!');
-        return;
-      }
-
-      sayInstruction(exercises[currentIndex]);
-      workoutRun(currentIndex + 1, exercises);
-    }, workoutIntervals.exerciseDelay));
-  };
+  useEffect(preparePetra, []);
 
   return (
     <>
-      <div className="flex justify-start content-start items-start flex-col shrink-0 items-end rounded-lg bg-yellow-500 p-4 md:h-52">
-        <p className={`place-self-start text-xl text-gray-800 md:text-3xl md:leading-normal`}>
+      <div className="flex shrink-0 flex-col content-start items-start items-end justify-start rounded-lg bg-yellow-500 p-4 md:h-52">
+        <p
+          className={`place-self-start text-xl text-gray-800 md:text-3xl md:leading-normal`}
+        >
           <strong>Welcome to Petra.</strong> Your personal trainer!
         </p>
-      <div className="place-self-start flex flex-wrap">
-        <p>{currentWorkout?.name} &nbsp; &nbsp;</p>
-        <p>{currentWorkout?.type} &nbsp; &nbsp;</p>
-        <p>{currentWorkout && timeToDisp(currentWorkout.time)}</p>
-      </div>
+        <div className="flex flex-wrap place-self-start">
+          <p>{currentWorkout?.name} &nbsp; &nbsp;</p>
+          <p>{currentWorkout?.type} &nbsp; &nbsp;</p>
+          <p>{currentWorkout && timeToDisp(currentWorkout.time)}</p>
+        </div>
       </div>
       <div className="mt-1 flex grow flex-col gap-4 md:flex-row">
         <div className="wrap flex- w-100 wrap flex flex-row justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:px-20">

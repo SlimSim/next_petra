@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '../ui/button'; // Import your Button component
-import { Petra, cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 
 interface IconButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
