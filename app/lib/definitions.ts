@@ -3,14 +3,26 @@
 // For simplicity of teaching, we're manually defining these types.
 // However, these types are generated automatically if you're using an ORM such as Prisma.
 
+export type SpeachInstruction = {
+  name: string;
+  time: number;
+};
+
+export enum WorkoutType {
+  Single = 'Single',
+  Double = 'Double',
+  Tabatha = 'Tabatha',
+  Stretch = 'Stretch',
+}
+
 export type Workout = {
   id?: string;
   name: string;
   time: number;
-  type: 'Single' | 'Double' | 'Tabatha' | 'Stretch';
+  type: WorkoutType;
   exercises: string[];
-  creator?: User; 
-}
+  creator?: User;
+};
 
 export type Timeout = ReturnType<typeof setTimeout>;
 

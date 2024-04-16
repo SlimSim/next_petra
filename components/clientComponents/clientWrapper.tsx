@@ -1,6 +1,6 @@
 'use client';
 
-import { Timeout, Workout } from '@/app/lib/definitions';
+import { SpeachInstruction, Timeout, Workout } from '@/app/lib/definitions';
 import React, { useEffect, useState } from 'react';
 import {
   Card,
@@ -10,7 +10,11 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/card';
-import { timeToDisp, timeToMinutes } from '@/lib/utils';
+import {
+  workoutToSpeachInstructions,
+  timeToDisp,
+  timeToMinutes,
+} from '@/lib/utils';
 import IconButton from '../slimSim/iconButton';
 import StartWorkoutButton from './startWorkoutButton';
 import { TrashIcon } from 'lucide-react';
@@ -31,32 +35,73 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
   let [currentTimeout, setCurrentTimeout] = useState<Timeout | null>(null);
 
   const handleStartWorkout = (workout: Workout) => {
-    stopWorkout();
+    stopWorkoutSilently();
     setCurrentWorkout(workout);
 
-    sayInstruction(
-      `Lets do the ${workout.name} for ${timeToMinutes(workout.time)} minutes.`,
-    );
-
     let currentIndex = 0;
-    workoutRun(currentIndex, workout.exercises, workoutIntervals.headerDelay);
+    let instructions = workoutToSpeachInstructions(workout);
+
+    sayInstruction(
+      `Lets do the ${workout.name} for ${timeToMinutes(
+        workout.time,
+      )} minutes, we start with ${instructions[0].name}.`,
+    );
+    setCurrentTimeout(
+      setTimeout(() => {
+        workoutRun(currentIndex, instructions);
+      }, 5000),
+    );
   };
 
   const workoutRun = (
     currentIndex: number,
-    exercises: string[],
-    delay?: number,
+    instructions: SpeachInstruction[],
+    currentTime?: number,
   ) => {
     setCurrentTimeout(
       setTimeout(() => {
-        if (exercises.length <= currentIndex) {
-          sayInstruction('Good work!');
+        if (instructions.length <= currentIndex) {
+          stopWorkoutSilently();
+          sayInstruction('Great work!');
           return;
         }
+        const totalExcerciseTime = instructions[currentIndex].time;
+        currentTime = currentTime == null ? totalExcerciseTime : currentTime;
 
-        sayInstruction(exercises[currentIndex]);
-        workoutRun(currentIndex + 1, exercises);
-      }, delay || workoutIntervals.exerciseDelay),
+        const halftime = Math.ceil(totalExcerciseTime / 2);
+
+        switch (currentTime) {
+          case totalExcerciseTime:
+            sayInstruction(`Lets do some ${instructions[currentIndex].name}`);
+            break;
+          case halftime:
+            sayInstruction(`Halftime`);
+            break;
+          case 30:
+            sayInstruction(`30 seconds left`);
+            break;
+          case 10:
+            if (halftime > 14) {
+              sayInstruction(`10`);
+            }
+            break;
+          case 0:
+            sayInstruction(`OK`);
+            break;
+
+          default:
+            break;
+        }
+
+        //sayInstruction(instructions[currentIndex].name);
+
+        const nextTime = currentTime - 1;
+        if (nextTime < 0) {
+          workoutRun(currentIndex + 1, instructions);
+        } else {
+          workoutRun(currentIndex, instructions, nextTime);
+        }
+      }, 1000),
     );
   };
 
@@ -64,8 +109,16 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
     if (currentTimeout === null) {
       return;
     }
-
+    stopWorkoutSilently();
     sayInstruction('Workout Stopped');
+  };
+
+  const stopWorkoutSilently = () => {
+    if (currentTimeout === null) {
+      return;
+    }
+
+    speechSynthesis.cancel();
     clearTimeout(currentTimeout);
     setCurrentWorkout(null);
     setCurrentTimeout(null);
@@ -80,12 +133,10 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
   };
 
   const sayInstruction = (text: string) => {
-    console.log(text);
     if (!('speechSynthesis' in window)) {
       console.warn('Speech synthesis not supported by this browser.');
       return;
     }
-    speechSynthesis.cancel();
     const voices = speechSynthesis.getVoices();
 
     const googleVoice = voices.find(
