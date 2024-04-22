@@ -26,15 +26,10 @@ interface ClientWrapperProps {
 }
 
 const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
-  const workoutIntervals = {
-    // Adjust these intervals based on your desired exercise execution time:
-    headerDelay: 4000,
-    exerciseDelay: 30000,
-  };
-
   let [currentWorkout, setCurrentWorkout] = useState<Workout | null>(null);
   let [currentTimeout, setCurrentTimeout] = useState<Timeout | null>(null);
   let [currentTimeLeft, setCurrentTimeLeft] = useState<string>('');
+  let [currentWorkoutTimeLeft, setCurrentWorkoutTimeLeft] = useState<number>(0);
   let [currentIndex, setCurrentIndex] = useState<number>(0);
   let [currentExercise, setCurrentExercise] = useState<string>('');
 
@@ -49,12 +44,14 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
         workout.time,
       )} minutes, we start with ${instructions[0].name}.`,
     );
+
     setCurrentIndex(0);
+    setCurrentWorkoutTimeLeft(workout.time);
     setCurrentExercise(instructions[0].name);
     setCurrentTimeLeft(timeToMinutesAndSeconds(instructions[0].time));
     setCurrentTimeout(
       setTimeout(() => {
-        workoutRun(currentIndex, instructions);
+        workoutRun(currentIndex, instructions, workout.time);
       }, 5000),
     );
   };
@@ -62,59 +59,63 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
   const workoutRun = (
     localCurrentIndex: number,
     instructions: SpeachInstruction[],
+    localCurrentWorkoutTime: number,
     localCurrentTime?: number,
   ) => {
+    if (instructions.length <= localCurrentIndex) {
+      stopWorkoutSilently();
+      sayInstruction('Great work!');
+      return;
+    }
+
+    const totalExcerciseTime = instructions[localCurrentIndex].time;
+    localCurrentTime =
+      localCurrentTime == null ? totalExcerciseTime : localCurrentTime;
+
+    setCurrentIndex(localCurrentIndex);
+    setCurrentWorkoutTimeLeft(localCurrentWorkoutTime);
+    setCurrentExercise(instructions[localCurrentIndex].name);
+    setCurrentTimeLeft(timeToMinutesAndSeconds(localCurrentTime));
+
+    const halftime = Math.ceil(totalExcerciseTime / 2);
+
+    switch (localCurrentTime) {
+      case totalExcerciseTime:
+        sayInstruction(`Lets do some ${instructions[localCurrentIndex].name}`);
+        break;
+      case halftime:
+        sayInstruction(`Halftime`);
+        break;
+      case 30:
+        sayInstruction(`30 seconds left`);
+        break;
+      case 10:
+        if (halftime > 14) {
+          sayInstruction(`10`);
+        }
+        break;
+      case 0:
+        sayInstruction(`OK`);
+        break;
+
+      default:
+        break;
+    }
+
+    const nextTime = localCurrentTime - 1;
+    const nextWorkoutTime = localCurrentWorkoutTime - 1;
     setCurrentTimeout(
       setTimeout(() => {
-        if (instructions.length <= localCurrentIndex) {
-          stopWorkoutSilently();
-          sayInstruction('Great work!');
-          return;
-        }
-
-        const totalExcerciseTime = instructions[localCurrentIndex].time;
-        localCurrentTime =
-          localCurrentTime == null ? totalExcerciseTime : localCurrentTime;
-
-        setCurrentTimeLeft(timeToMinutesAndSeconds(localCurrentTime));
-
-        const halftime = Math.ceil(totalExcerciseTime / 2);
-
-        switch (localCurrentTime) {
-          case totalExcerciseTime:
-            sayInstruction(
-              `Lets do some ${instructions[localCurrentIndex].name}`,
-            );
-            break;
-          case halftime:
-            sayInstruction(`Halftime`);
-            break;
-          case 30:
-            sayInstruction(`30 seconds left`);
-            break;
-          case 10:
-            if (halftime > 14) {
-              sayInstruction(`10`);
-            }
-            break;
-          case 0:
-            sayInstruction(`OK`);
-            break;
-
-          default:
-            break;
-        }
-
-        const nextTime = localCurrentTime - 1;
-
-        if (nextTime < 0) {
+        if (nextTime <= 0) {
           const nextIndex = localCurrentIndex + 1;
-          setCurrentIndex(nextIndex);
-          setCurrentExercise(instructions[nextIndex].name);
-
-          workoutRun(nextIndex, instructions);
+          workoutRun(nextIndex, instructions, nextWorkoutTime);
         } else {
-          workoutRun(localCurrentIndex, instructions, nextTime);
+          workoutRun(
+            localCurrentIndex,
+            instructions,
+            nextWorkoutTime,
+            nextTime,
+          );
         }
       }, 1000),
     );
@@ -129,17 +130,16 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
   };
 
   const stopWorkoutSilently = () => {
-    if (currentTimeout === null) {
-      return;
-    }
-
     speechSynthesis.cancel();
-    clearTimeout(currentTimeout);
     setCurrentTimeLeft('');
     setCurrentIndex(0);
     setCurrentExercise('');
     setCurrentWorkout(null);
     setCurrentTimeout(null);
+
+    if (currentTimeout != null) {
+      clearTimeout(currentTimeout);
+    }
   };
 
   const preparePetra = () => {
@@ -183,7 +183,12 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
         <div className="flex flex-wrap place-self-start">
           <p>{currentWorkout?.name} &nbsp; &nbsp;</p>
           <p>{currentWorkout?.type} &nbsp; &nbsp;</p>
-          <p>{currentWorkout && timeToDisp(currentWorkout.time)}</p>
+          <p>
+            {currentWorkout &&
+              timeToMinutesAndSeconds(currentWorkoutTimeLeft) +
+                '/' +
+                timeToDisp(currentWorkout.time)}
+          </p>
         </div>
         <div className="flex flex-wrap place-self-start md:text-3xl">
           <p>{currentWorkout && currentIndex + 1 + ':'} &nbsp; </p>

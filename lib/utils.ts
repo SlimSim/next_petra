@@ -6,16 +6,21 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-
 export function timeToMinutesAndSeconds(time: number): string {
   const hours = Math.floor(time / 3600);
   const minutes = Math.floor((time % 3600) / 60);
-  const seconds = Math.floor(time % 3600);
-  return hours > 0
-    ? `${hours}:${minutes < 10 ? '0' : ''}${minutes}`
-    : `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-}
+  const seconds = Math.floor(time % 60);
 
+  const formattedHours = hours < 10 ? `0${hours}` : `${hours}`;
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+  const formattedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+
+  if (hours > 0) {
+    return `${formattedHours}:${formattedMinutes}`;
+  } else {
+    return `${formattedMinutes}:${formattedSeconds}`;
+  }
+}
 
 export function timeToMinutes(time: number): string {
   const hours = Math.floor(time / 3600);
