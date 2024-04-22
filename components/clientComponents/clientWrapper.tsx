@@ -14,6 +14,7 @@ import {
   workoutToSpeachInstructions,
   timeToDisp,
   timeToMinutes,
+  timeToMinutesAndSeconds,
 } from '@/lib/utils';
 import IconButton from '../slimSim/iconButton';
 import StartWorkoutButton from './startWorkoutButton';
@@ -33,12 +34,14 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
 
   let [currentWorkout, setCurrentWorkout] = useState<Workout | null>(null);
   let [currentTimeout, setCurrentTimeout] = useState<Timeout | null>(null);
+  let [currentTimeLeft, setCurrentTimeLeft] = useState<string>('');
+  let [currentIndex, setCurrentIndex] = useState<number>(0);
+  let [currentExercise, setCurrentExercise] = useState<string>('');
 
   const handleStartWorkout = (workout: Workout) => {
     stopWorkoutSilently();
     setCurrentWorkout(workout);
 
-    let currentIndex = 0;
     let instructions = workoutToSpeachInstructions(workout);
 
     sayInstruction(
@@ -46,6 +49,9 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
         workout.time,
       )} minutes, we start with ${instructions[0].name}.`,
     );
+    setCurrentIndex(0);
+    setCurrentExercise(instructions[0].name);
+    setCurrentTimeLeft(timeToMinutesAndSeconds(instructions[0].time));
     setCurrentTimeout(
       setTimeout(() => {
         workoutRun(currentIndex, instructions);
@@ -54,25 +60,31 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
   };
 
   const workoutRun = (
-    currentIndex: number,
+    localCurrentIndex: number,
     instructions: SpeachInstruction[],
-    currentTime?: number,
+    localCurrentTime?: number,
   ) => {
     setCurrentTimeout(
       setTimeout(() => {
-        if (instructions.length <= currentIndex) {
+        if (instructions.length <= localCurrentIndex) {
           stopWorkoutSilently();
           sayInstruction('Great work!');
           return;
         }
-        const totalExcerciseTime = instructions[currentIndex].time;
-        currentTime = currentTime == null ? totalExcerciseTime : currentTime;
+
+        const totalExcerciseTime = instructions[localCurrentIndex].time;
+        localCurrentTime =
+          localCurrentTime == null ? totalExcerciseTime : localCurrentTime;
+
+        setCurrentTimeLeft(timeToMinutesAndSeconds(localCurrentTime));
 
         const halftime = Math.ceil(totalExcerciseTime / 2);
 
-        switch (currentTime) {
+        switch (localCurrentTime) {
           case totalExcerciseTime:
-            sayInstruction(`Lets do some ${instructions[currentIndex].name}`);
+            sayInstruction(
+              `Lets do some ${instructions[localCurrentIndex].name}`,
+            );
             break;
           case halftime:
             sayInstruction(`Halftime`);
@@ -93,13 +105,16 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
             break;
         }
 
-        //sayInstruction(instructions[currentIndex].name);
+        const nextTime = localCurrentTime - 1;
 
-        const nextTime = currentTime - 1;
         if (nextTime < 0) {
-          workoutRun(currentIndex + 1, instructions);
+          const nextIndex = localCurrentIndex + 1;
+          setCurrentIndex(nextIndex);
+          setCurrentExercise(instructions[nextIndex].name);
+
+          workoutRun(nextIndex, instructions);
         } else {
-          workoutRun(currentIndex, instructions, nextTime);
+          workoutRun(localCurrentIndex, instructions, nextTime);
         }
       }, 1000),
     );
@@ -120,6 +135,9 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
 
     speechSynthesis.cancel();
     clearTimeout(currentTimeout);
+    setCurrentTimeLeft('');
+    setCurrentIndex(0);
+    setCurrentExercise('');
     setCurrentWorkout(null);
     setCurrentTimeout(null);
   };
@@ -166,6 +184,11 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
           <p>{currentWorkout?.name} &nbsp; &nbsp;</p>
           <p>{currentWorkout?.type} &nbsp; &nbsp;</p>
           <p>{currentWorkout && timeToDisp(currentWorkout.time)}</p>
+        </div>
+        <div className="flex flex-wrap place-self-start md:text-3xl">
+          <p>{currentWorkout && currentIndex + 1 + ':'} &nbsp; </p>
+          <p>{currentTimeLeft} &nbsp; &nbsp;</p>
+          <p>{currentExercise}</p>
         </div>
       </div>
       <div className="mt-1 flex grow flex-col gap-4 md:flex-row">

@@ -6,6 +6,17 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+
+export function timeToMinutesAndSeconds(time: number): string {
+  const hours = Math.floor(time / 3600);
+  const minutes = Math.floor((time % 3600) / 60);
+  const seconds = Math.floor(time % 3600);
+  return hours > 0
+    ? `${hours}:${minutes < 10 ? '0' : ''}${minutes}`
+    : `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
+
+
 export function timeToMinutes(time: number): string {
   const hours = Math.floor(time / 3600);
   const minutes = Math.floor((time % 3600) / 60);
