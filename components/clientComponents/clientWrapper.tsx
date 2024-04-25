@@ -1,7 +1,6 @@
 'use client';
 
-import { SpeachInstruction, Timeout, Workout } from '@/app/lib/definitions';
-import React, { useEffect, useState } from 'react';
+import { Workout } from '@/app/lib/definitions';
 import {
   Card,
   CardContent,
@@ -10,17 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/card';
-import {
-  workoutToSpeachInstructions,
-  timeToDisp,
-  timeToMinutes,
-  timeToMinutesAndSeconds,
-} from '@/lib/utils';
+import { timeToDisp } from '@/lib/utils';
 import IconButton from '../slimSim/iconButton';
 import StartWorkoutButton from './startWorkoutButton';
 import { TrashIcon } from 'lucide-react';
 import BottomBar from '../slimSim/bottomBar';
 import { useWorkout } from './hooks/useWorkout';
+import HeaderBar from '../slimSim/headerBar';
 
 interface ClientWrapperProps {
   workouts: Workout[];
@@ -38,28 +33,13 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
   } = useWorkout();
   return (
     <>
-      <div className="flex shrink-0 flex-col content-start items-start items-end justify-start rounded-lg bg-yellow-500 p-4 md:h-52">
-        <p
-          className={`place-self-start text-xl text-gray-800 md:text-3xl md:leading-normal`}
-        >
-          <strong>Welcome to Petra.</strong> Your personal trainer!
-        </p>
-        <div className="flex flex-wrap place-self-start">
-          <p>{currentWorkout?.name} &nbsp; &nbsp;</p>
-          <p>{currentWorkout?.type} &nbsp; &nbsp;</p>
-          <p>
-            {currentWorkout &&
-              timeToMinutesAndSeconds(currentWorkoutTimeLeft) +
-                '/' +
-                timeToDisp(currentWorkout.time)}
-          </p>
-        </div>
-        <div className="flex flex-wrap place-self-start md:text-3xl">
-          <p>{currentWorkout && currentIndex + 1 + ':'} &nbsp; </p>
-          <p>{currentTimeLeft} &nbsp; &nbsp;</p>
-          <p>{currentExercise}</p>
-        </div>
-      </div>
+      <HeaderBar
+        workout={currentWorkout}
+        index={currentIndex}
+        timeLeft={currentTimeLeft}
+        exercise={currentExercise}
+        workoutTimeLeft={currentWorkoutTimeLeft}
+      ></HeaderBar>
       <div className="mt-1 flex grow flex-col gap-4 md:flex-row">
         <div className="wrap flex- w-100 wrap flex flex-row justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:px-20">
           {workouts.map((workout) => {
