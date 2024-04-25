@@ -29,15 +29,12 @@ interface ClientWrapperProps {
 const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
   const {
     currentWorkout,
-    currentTimeout,
     currentTimeLeft,
     currentWorkoutTimeLeft,
     currentIndex,
     currentExercise,
     startWorkout,
-    stopWorkoutSilently,
     stopWorkout,
-    sayInstruction,
   } = useWorkout();
   return (
     <>

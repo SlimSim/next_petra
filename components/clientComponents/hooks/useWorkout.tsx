@@ -157,14 +157,11 @@ export function useWorkout() {
 
   return {
     currentWorkout,
-    currentTimeout,
     currentTimeLeft,
     currentWorkoutTimeLeft,
     currentIndex,
     currentExercise,
     startWorkout,
-    stopWorkoutSilently,
     stopWorkout,
-    sayInstruction,
   };
 }
