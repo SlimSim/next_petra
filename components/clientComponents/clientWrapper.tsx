@@ -40,40 +40,38 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
         exercise={currentExercise}
         workoutTimeLeft={currentWorkoutTimeLeft}
       ></HeaderBar>
-      <div className="mt-1 flex grow flex-col gap-4 md:flex-row">
-        <div className="wrap flex- w-100 wrap flex flex-row justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:px-20">
-          {workouts.map((workout) => {
-            return (
-              <Card key={workout.name}>
-                <CardHeader>
-                  <CardTitle>{workout.name}</CardTitle>
-                  <CardDescription>
-                    {workout.type}, {timeToDisp(workout.time)}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {workout.exercises.map((item, index) => (
-                    <span key={index}>
-                      {item}
-                      {index < workout.exercises.length - 1 &&
-                        (index % 2 === 0 ? ', ' : ',\n')}
-                    </span>
-                  ))}
-                </CardContent>
-                <CardFooter className="flex justify-between">
-                  <IconButton onClick={() => {}} icon={<TrashIcon />}>
-                    Remove
-                  </IconButton>
-                  <StartWorkoutButton
-                    onStartWorkout={() => {
-                      startWorkout(workout);
-                    }}
-                  />
-                </CardFooter>
-              </Card>
-            );
-          })}
-        </div>
+      <div className="wrap w-100 grid grid-cols-1 gap-6 rounded-lg py-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {workouts.map((workout) => {
+          return (
+            <Card key={workout.name}>
+              <CardHeader>
+                <CardTitle>{workout.name}</CardTitle>
+                <CardDescription>
+                  {workout.type}, {timeToDisp(workout.time)}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {workout.exercises.map((item, index) => (
+                  <span key={index}>
+                    {item}
+                    {index < workout.exercises.length - 1 &&
+                      (index % 2 === 0 ? ', ' : ',\n')}
+                  </span>
+                ))}
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                <IconButton onClick={() => {}} icon={<TrashIcon />}>
+                  Remove
+                </IconButton>
+                <StartWorkoutButton
+                  onStartWorkout={() => {
+                    startWorkout(workout);
+                  }}
+                />
+              </CardFooter>
+            </Card>
+          );
+        })}
       </div>
 
       <BottomBar onEndWorkout={stopWorkout}></BottomBar>
