@@ -6,7 +6,7 @@ export default async function Page() {
   const workouts: Workout[] = await fetchWorkouts();
 
   return (
-    <main className="flex min-h-screen pb-20 flex-col p-6">
+    <main className="flex min-h-screen flex-col bg-gray-50 p-6 pb-20">
       <ClientWrapper workouts={workouts}></ClientWrapper>
     </main>
   );
