@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function workoutToTime(type: WorkoutType, exercises: string):number {
+export function workoutToTime(type: WorkoutType, exercises: string[]):number {
 
   switch (type) {
     case WorkoutType.Single: {
@@ -40,7 +40,7 @@ export function timeToMinutesAndSeconds(time: number): string {
 
 export function timeToMinutes(time: number): string {
   const hours = Math.floor(time / 3600);
-  const minutes = Math.floor((time % 3600) / 60);
+  const minutes = Math.round((time % 3600) / 60);
   return hours > 0
     ? `${hours}:${minutes < 10 ? '0' : ''}${minutes}`
     : `${minutes}`;

@@ -20,9 +20,9 @@ export async function createWorkout(formData: FormData) {
   const createdDate:string = new Date().toISOString().split('T')[0];
   
   const name:string = workoutName;
-  const time:number = workoutToTime(workoutType, workoutExercises);
   const type:string = workoutType;
   const exercises:any = workoutExercises.split(',');
+  const time:number = workoutToTime(workoutType, exercises);
   
     const insertedWorkout = await sql`
         INSERT INTO PetraWrokouts (name, time, type, exercises, createddate)
