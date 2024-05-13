@@ -6,6 +6,22 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function workoutToTime(type: WorkoutType, exercises: string):number {
+
+  switch (type) {
+    case WorkoutType.Single: {
+      return 40*exercises.length - 10;
+    }
+    case WorkoutType.Double: {
+      if( exercises.length % 2 == 0) {
+        return (45+45+30+30+15)*exercises.length/2 - 15;
+      }
+      return (45+45+30+30+15)*(exercises.length-1)/2 + 45+30;
+    }
+  }
+  return exercises.length;
+}
+
 export function timeToMinutesAndSeconds(time: number): string {
   const hours = Math.floor(time / 3600);
   const minutes = Math.floor((time % 3600) / 60);
@@ -88,4 +104,11 @@ export function toDoubleSpeachInstructions(
   si.pop();
 
   return si;
+}
+
+
+export function getWorkoutTypes(): string[] {
+  const stringKeys = Object.keys(WorkoutType).filter((v) => isNaN(Number(v)));
+
+  return stringKeys;
 }

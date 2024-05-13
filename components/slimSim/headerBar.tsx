@@ -18,7 +18,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
   workoutTimeLeft,
 }) => {
   return (
-    <div className="flex shrink-0 flex-col content-start items-start items-end justify-start rounded-lg bg-yellow-500 p-4 md:h-52">
+    <div className="flex shrink-0 flex-col content-start items-start justify-start rounded-lg bg-yellow-500 p-4 md:h-52">
       <p
         className={`place-self-start text-xl text-gray-800 md:text-3xl md:leading-normal`}
       >

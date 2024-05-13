@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { SpeachInstruction, Timeout, Workout } from '@/app/lib/definitions';
 import {
   workoutToSpeachInstructions,
-  timeToDisp,
   timeToMinutes,
   timeToMinutesAndSeconds,
 } from '@/lib/utils';
