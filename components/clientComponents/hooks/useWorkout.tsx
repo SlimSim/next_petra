@@ -21,7 +21,7 @@ export function useWorkout() {
 
     let instructions = workoutToSpeachInstructions(workout);
 
-    sayInstruction(
+    say(
       `Lets do the ${workout.name} for ${timeToMinutes(
         workout.time,
       )} minutes, we start with ${instructions[0].name}.`,
@@ -46,7 +46,7 @@ export function useWorkout() {
   ) => {
     if (instructions.length <= localCurrentIndex) {
       stopWorkoutSilently();
-      sayInstruction('Great work!');
+      say('Great work!');
       return;
     }
 
@@ -61,27 +61,10 @@ export function useWorkout() {
 
     const halftime = Math.ceil(totalExcerciseTime / 2);
 
-    switch (localCurrentTime) {
-      case totalExcerciseTime:
-        sayInstruction(`Lets do some ${instructions[localCurrentIndex].name}`);
-        break;
-      case halftime:
-        sayInstruction(`Halftime`);
-        break;
-      case 30:
-        sayInstruction(`30 seconds left`);
-        break;
-      case 10:
-        if (halftime > 14) {
-          sayInstruction(`10`);
-        }
-        break;
-      case 0:
-        sayInstruction(`OK`);
-        break;
-
-      default:
-        break;
+    if( instructions[localCurrentIndex].name == "pause" ) {
+      sayPause(localCurrentTime, totalExcerciseTime, instructions[localCurrentIndex].time, instructions[localCurrentIndex+1].name);
+    } else {
+      sayExcersise( localCurrentTime, totalExcerciseTime, halftime, instructions[localCurrentIndex].name );
     }
 
     const nextTime = localCurrentTime - 1;
@@ -108,7 +91,7 @@ export function useWorkout() {
       return;
     }
     stopWorkoutSilently();
-    sayInstruction('Workout Stopped');
+    say('Workout Stopped');
   };
 
   const stopWorkoutSilently = () => {
@@ -132,7 +115,46 @@ export function useWorkout() {
     speechSynthesis.getVoices();
   };
 
-  const sayInstruction = (text: string) => {
+  const sayExcersise = (localCurrentTime: number, totalExcerciseTime: number, halftime: number, excersise: string) => {
+    switch (localCurrentTime) {
+      case totalExcerciseTime:
+        say(`Lets do some ${excersise}`);
+        break;
+      case halftime:
+        say(`Halftime`);
+        break;
+      case 30:
+        say(`30 seconds left`);
+        break;
+      case 10:
+        if (halftime > 14) {
+          say(`10`);
+        }
+        break;
+      case 1:
+        say(`OK`);
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  const sayPause = (localCurrentTime: number, totalExcerciseTime: number, pauseTime: number, nextExcersise: string) => {
+    switch (localCurrentTime) {
+      case totalExcerciseTime:
+        say(`Lets pause for ${pauseTime} seconds, then will do some ${nextExcersise}`);
+        break;
+      case 1:
+        say(`OK`);
+        break;
+      default:
+        break;
+    }
+  }
+
+
+  const say = (text: string) => {
     if (!('speechSynthesis' in window)) {
       console.warn('Speech synthesis not supported by this browser.');
       return;
