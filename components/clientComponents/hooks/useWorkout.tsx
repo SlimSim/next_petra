@@ -61,10 +61,20 @@ export function useWorkout() {
 
     const halftime = Math.ceil(totalExcerciseTime / 2);
 
-    if( instructions[localCurrentIndex].name == "pause" ) {
-      sayPause(localCurrentTime, totalExcerciseTime, instructions[localCurrentIndex].time, instructions[localCurrentIndex+1].name);
+    if (instructions[localCurrentIndex].name == 'pause') {
+      sayPause(
+        localCurrentTime,
+        totalExcerciseTime,
+        instructions[localCurrentIndex].time,
+        instructions[localCurrentIndex + 1].name,
+      );
     } else {
-      sayExcersise( localCurrentTime, totalExcerciseTime, halftime, instructions[localCurrentIndex].name );
+      sayExcersise(
+        localCurrentTime,
+        totalExcerciseTime,
+        halftime,
+        instructions[localCurrentIndex].name,
+      );
     }
 
     const nextTime = localCurrentTime - 1;
@@ -115,7 +125,12 @@ export function useWorkout() {
     speechSynthesis.getVoices();
   };
 
-  const sayExcersise = (localCurrentTime: number, totalExcerciseTime: number, halftime: number, excersise: string) => {
+  const sayExcersise = (
+    localCurrentTime: number,
+    totalExcerciseTime: number,
+    halftime: number,
+    excersise: string,
+  ) => {
     switch (localCurrentTime) {
       case totalExcerciseTime:
         say(`Lets do some ${excersise}`);
@@ -138,12 +153,19 @@ export function useWorkout() {
       default:
         break;
     }
-  }
+  };
 
-  const sayPause = (localCurrentTime: number, totalExcerciseTime: number, pauseTime: number, nextExcersise: string) => {
+  const sayPause = (
+    localCurrentTime: number,
+    totalExcerciseTime: number,
+    pauseTime: number,
+    nextExcersise: string,
+  ) => {
     switch (localCurrentTime) {
       case totalExcerciseTime:
-        say(`Lets pause for ${pauseTime} seconds, then will do some ${nextExcersise}`);
+        say(
+          `Lets pause for ${pauseTime} seconds, then will do some ${nextExcersise}`,
+        );
         break;
       case 1:
         say(`OK`);
@@ -151,8 +173,7 @@ export function useWorkout() {
       default:
         break;
     }
-  }
-
+  };
 
   const say = (text: string) => {
     if (!('speechSynthesis' in window)) {
