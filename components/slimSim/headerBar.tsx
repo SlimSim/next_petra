@@ -34,7 +34,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
           <strong>Welcome to Petra.</strong> Your personal trainer!
         </p>
       </div>
-      <div className="sticky top-0 z-10 flex shrink-0 flex-row content-start items-center  rounded-b-lg bg-yellow-500 p-0 pl-4 align-middle md:h-32">
+      <div className="sticky top-0 z-10 flex shrink-0 flex-row content-start items-center rounded-b-lg bg-yellow-500 p-0 pl-4 align-middle shadow-md md:h-32">
         <div className="grow py-2">
           <div className="flex flex-wrap place-self-start">
             <p>{workout?.name} &nbsp; &nbsp;</p>
