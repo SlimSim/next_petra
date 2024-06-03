@@ -22,7 +22,9 @@ interface ClientWrapperProps {
   workouts: Workout[];
 }
 
-const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
+const ClientWrapper: React.FC<ClientWrapperProps> = ({
+  workouts: defaultWorkouts,
+}) => {
   const {
     currentWorkout,
     currentTimeLeft,
@@ -33,7 +35,13 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
     stopWorkout,
   } = useWorkout();
 
-  const [myWorkouts] = usePersistentState<Workout[]>('myWorkouts', []);
+  const [myWorkouts, setMyWorkouts] = usePersistentState<Workout[]>(
+    'myWorkouts',
+    [],
+  );
+  if (myWorkouts.length == 0) {
+    setMyWorkouts(defaultWorkouts);
+  }
 
   return (
     <>

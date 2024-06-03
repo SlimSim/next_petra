@@ -12,10 +12,17 @@ import {
 import { formatCurrency } from './utils';
 import { workouts } from './placeholder-data';
 
+export async function fetchDefaultWorkouts(): Promise<Workout[]> {
+
+  try {
+    const data = await sql<Workout>`SELECT * FROM PetraWrokouts where user_id = '00000000-0000-0000-0000-000000000001'`;
+    return data.rows;
+  } catch (error) {
+    return workouts as Workout[];
+  }
+}
+
 export async function fetchWorkouts(): Promise<Workout[]> {
-
-
-
   try {
     const data = await sql<Workout>`SELECT * FROM PetraWrokouts`;
     return data.rows;
