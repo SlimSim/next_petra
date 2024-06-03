@@ -1,19 +1,24 @@
 'use client';
+
 import { Workout } from '@/app/lib/definitions';
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '../ui/card';
 import { timeToDisp } from '@/lib/utils';
 import IconButton from '../slimSim/iconButton';
-import { StarIcon } from 'lucide-react';
+import StartWorkoutButton from './startWorkoutButton';
+import { StarIcon, TrashIcon } from 'lucide-react';
 import BottomBar from '../slimSim/bottomBar';
 import { useWorkout } from './hooks/useWorkout';
 import HeaderBar from '../slimSim/headerBar';
-import useWorkoutClassNames from './hooks/useWorkoutClassNames'; // Import the custom hook
+import { Button } from '../ui/button';
+import { useState, useEffect } from 'react';
+import usePersistentState from './hooks/usePersistentState';
 
 interface ClientWrapperAllWorkoutsProps {
   workouts: Workout[];
@@ -32,8 +37,10 @@ const ClientWrapperAllWorkouts: React.FC<ClientWrapperAllWorkoutsProps> = ({
     stopWorkout,
   } = useWorkout();
 
-  const { classNames, myWorkouts, setMyWorkouts } =
-    useWorkoutClassNames(workouts);
+  const [myWorkouts, setMyWorkouts] = usePersistentState<Workout[]>(
+    'myWorkouts',
+    [],
+  );
 
   const handleStarClick = (workout: Workout, stared: boolean) => {
     if (stared) {
@@ -51,11 +58,11 @@ const ClientWrapperAllWorkouts: React.FC<ClientWrapperAllWorkoutsProps> = ({
         timeLeft={currentTimeLeft}
         exercise={currentExercise}
         workoutTimeLeft={currentWorkoutTimeLeft}
-      />
+      ></HeaderBar>
       <div className="wrap w-100 grid grid-cols-1 gap-6 rounded-lg py-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {workouts.map((workout) => {
           const stared = myWorkouts.some((w) => w.id === workout.id);
-          const classX = workout.id != null ? classNames[workout.id] || '' : '';
+          var staredClasses = stared ? 'text-yellow-500 fill-yellow-500' : '';
 
           return (
             <Card key={workout.name}>
@@ -65,7 +72,7 @@ const ClientWrapperAllWorkouts: React.FC<ClientWrapperAllWorkoutsProps> = ({
                   <IconButton
                     className="absolute right-0 top-0 m-0 p-3 pt-1"
                     onClick={() => handleStarClick(workout, stared)}
-                    icon={<StarIcon className={classX} />}
+                    icon={<StarIcon className={staredClasses} />}
                   >
                     Star
                   </IconButton>
@@ -79,7 +86,7 @@ const ClientWrapperAllWorkouts: React.FC<ClientWrapperAllWorkoutsProps> = ({
                   <span key={index}>
                     {item}
                     {index < workout.exercises.length - 1 &&
-                      (index % 2 === 0 ? ', ' : ',\n')}
+                      (index % 2 === 0 ? ', ' : ', ')}
                   </span>
                 ))}
               </CardContent>
@@ -88,7 +95,7 @@ const ClientWrapperAllWorkouts: React.FC<ClientWrapperAllWorkoutsProps> = ({
         })}
       </div>
 
-      <BottomBar onEndWorkout={stopWorkout} />
+      <BottomBar onEndWorkout={stopWorkout}></BottomBar>
     </>
   );
 };

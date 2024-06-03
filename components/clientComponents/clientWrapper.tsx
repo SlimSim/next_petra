@@ -16,6 +16,7 @@ import { TrashIcon } from 'lucide-react';
 import BottomBar from '../slimSim/bottomBar';
 import { useWorkout } from './hooks/useWorkout';
 import HeaderBar from '../slimSim/headerBar';
+import usePersistentState from './hooks/usePersistentState';
 
 interface ClientWrapperProps {
   workouts: Workout[];
@@ -31,6 +32,9 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
     startWorkout,
     stopWorkout,
   } = useWorkout();
+
+  const [myWorkouts] = usePersistentState<Workout[]>('myWorkouts', []);
+
   return (
     <>
       <HeaderBar
@@ -40,8 +44,9 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({ workouts }) => {
         exercise={currentExercise}
         workoutTimeLeft={currentWorkoutTimeLeft}
       ></HeaderBar>
+
       <div className="wrap w-100 grid grid-cols-1 gap-6 rounded-lg py-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {workouts.map((workout) => {
+        {myWorkouts.map((workout) => {
           return (
             <Card key={workout.name}>
               <CardHeader>

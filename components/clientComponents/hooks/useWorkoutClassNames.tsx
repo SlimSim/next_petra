@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Workout } from '@/app/lib/definitions';
-import { useStatePersist } from 'use-state-persist';
+import usePersistentState from './usePersistentState';
 
 const useWorkoutClassNames = (workouts: Workout[]) => {
-  const [myWorkouts, setMyWorkouts] = useStatePersist<Workout[]>(
+  const [myWorkouts, setMyWorkouts] = usePersistentState<Workout[]>(
     'myWorkouts',
     [],
   );
