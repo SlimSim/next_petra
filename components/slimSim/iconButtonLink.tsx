@@ -19,8 +19,8 @@ const IconButtonLink: React.FC<IconButtonLinkProps> = ({
     <a
       href={href}
       className={cn(
-        'inline-flex h-[63px] flex-col items-center justify-center px-5 ',
-        'text-sm text-gray-500 hover:text-yellow-600 dark:text-gray-400 dark:hover:text-yellow-500',
+        'inline-flex h-[63px] flex-col items-center justify-center rounded-md px-5 text-sm text-gray-500',
+        'hover:bg-accent hover:text-accent-foreground hover:text-yellow-600 dark:text-gray-400 dark:hover:text-yellow-500',
         className,
       )}
     >
