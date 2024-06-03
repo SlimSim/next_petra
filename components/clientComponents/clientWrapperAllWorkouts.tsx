@@ -58,6 +58,7 @@ const ClientWrapperAllWorkouts: React.FC<ClientWrapperAllWorkoutsProps> = ({
         timeLeft={currentTimeLeft}
         exercise={currentExercise}
         workoutTimeLeft={currentWorkoutTimeLeft}
+        onEndWorkout={() => {}}
       ></HeaderBar>
       <div className="wrap w-100 grid grid-cols-1 gap-6 rounded-lg py-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {workouts.map((workout) => {
@@ -95,7 +96,7 @@ const ClientWrapperAllWorkouts: React.FC<ClientWrapperAllWorkoutsProps> = ({
         })}
       </div>
 
-      <BottomBar onEndWorkout={stopWorkout}></BottomBar>
+      <BottomBar></BottomBar>
     </>
   );
 };
