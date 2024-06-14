@@ -53,12 +53,15 @@ const ClientWrapperAllWorkouts: React.FC<ClientWrapperAllWorkoutsProps> = ({
   return (
     <>
       <HeaderBar
-        workout={currentWorkout}
-        index={currentIndex}
-        timeLeft={currentTimeLeft}
-        exercise={currentExercise}
-        workoutTimeLeft={currentWorkoutTimeLeft}
-        onEndWorkout={() => {}}
+        showBottom={false}
+        top={
+          <>
+            <strong>Welcome to Petra.</strong> Your personal trainer!
+          </>
+        }
+        bottom={
+          <div className="h-2"></div>
+        }
       ></HeaderBar>
       <div className="wrap w-100 grid grid-cols-1 gap-6 rounded-lg py-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {workouts.map((workout) => {

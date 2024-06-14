@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/card';
-import { timeToDisp } from '@/lib/utils';
+import { timeToDisp, timeToMinutesAndSeconds } from '@/lib/utils';
 import IconButton from '../slimSim/iconButton';
 import StartWorkoutButton from './startWorkoutButton';
 import { TrashIcon } from 'lucide-react';
@@ -17,6 +17,8 @@ import BottomBar from '../slimSim/bottomBar';
 import { useWorkout } from './hooks/useWorkout';
 import HeaderBar from '../slimSim/headerBar';
 import usePersistentState from './hooks/usePersistentState';
+import HeaderBarX from '../slimSim/headerBarX';
+import { EndWorkoutButton } from './endWorkoutButton';
 
 interface ClientWrapperProps {
   workouts: Workout[];
@@ -45,14 +47,38 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({
 
   return (
     <>
-      <HeaderBar
-        workout={currentWorkout}
-        index={currentIndex}
-        timeLeft={currentTimeLeft}
-        exercise={currentExercise}
-        workoutTimeLeft={currentWorkoutTimeLeft}
-        onEndWorkout={stopWorkout}
-      ></HeaderBar>
+      <HeaderBarX
+        showBottom={!!currentWorkout}
+        top={
+          <>
+            <strong>Welcome to Petra.</strong> Your personal trainer!
+          </>
+        }
+        bottom={
+          <>
+            <div className="grow py-2">
+              <div className="flex flex-wrap place-self-start">
+                <p>{currentWorkout?.name} &nbsp; &nbsp;</p>
+                <p>{currentWorkout?.type} &nbsp; &nbsp;</p>
+                <p>
+                  {currentWorkout &&
+                    timeToMinutesAndSeconds(
+                      currentTimeLeft as unknown as number,
+                    ) +
+                      '/' +
+                      timeToDisp(currentWorkout.time)}
+                </p>
+              </div>
+              <div className="flex flex-wrap place-self-start md:text-3xl">
+                <p>{currentWorkout && currentIndex + 1 + ':'} &nbsp; </p>
+                <p>{currentTimeLeft} &nbsp; &nbsp;</p>
+                <p>{currentExercise}</p>
+              </div>
+            </div>
+            {currentWorkout && <EndWorkoutButton onEndWorkout={stopWorkout} />}
+          </>
+        }
+      ></HeaderBarX>
 
       <div className="wrap w-100 grid grid-cols-1 gap-6 rounded-lg py-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {myWorkouts.map((workout) => {
