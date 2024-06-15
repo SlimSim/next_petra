@@ -13,18 +13,18 @@ så kan play-sidan använda dom och toggla vilken som synns beroende på vad som
 och så kan new-sidan bara visa en enkel Welcome to petra, lets create a new workout!
 */
 
-interface HeaderBarXProps {
+interface HeaderBarProps {
   top: ReactElement<any, any>;
   bottom: ReactElement<any, any>;
   showBottom: boolean;
 }
 
-const HeaderBar: React.FC<HeaderBarXProps> = ({ top, bottom, showBottom }) => {
+const HeaderBar: React.FC<HeaderBarProps> = ({ top, bottom, showBottom }) => {
   return (
     <>
       <div
         className={cn(
-          `sticky -top-2 flex shrink-0 flex-col content-start items-start justify-start rounded-t-lg bg-yellow-500 p-4 pb-0 md:h-20 z-20`,
+          `sticky -top-2 z-20 flex shrink-0 flex-col content-start items-start justify-start rounded-t-lg bg-yellow-500 p-4 pb-0 md:h-20`,
           { 'z-30': !showBottom },
         )}
       >

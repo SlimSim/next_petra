@@ -17,7 +17,6 @@ import BottomBar from '../slimSim/bottomBar';
 import { useWorkout } from './hooks/useWorkout';
 import HeaderBar from '../slimSim/headerBar';
 import usePersistentState from './hooks/usePersistentState';
-import HeaderBarX from '../slimSim/headerBarX';
 import { EndWorkoutButton } from './endWorkoutButton';
 
 interface ClientWrapperProps {
@@ -47,7 +46,7 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({
 
   return (
     <>
-      <HeaderBarX
+      <HeaderBar
         showBottom={!!currentWorkout}
         top={
           <>
@@ -78,7 +77,7 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({
             {currentWorkout && <EndWorkoutButton onEndWorkout={stopWorkout} />}
           </>
         }
-      ></HeaderBarX>
+      ></HeaderBar>
 
       <div className="wrap w-100 grid grid-cols-1 gap-6 rounded-lg py-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {myWorkouts.map((workout) => {
