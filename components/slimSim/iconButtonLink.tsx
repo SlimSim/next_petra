@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 interface IconButtonLinkProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -16,7 +17,7 @@ const IconButtonLink: React.FC<IconButtonLinkProps> = ({
   children,
 }) => {
   return (
-    <a
+    <Link
       href={href}
       className={cn(
         'inline-flex h-[63px] flex-col items-center justify-center rounded-md px-5 text-sm text-gray-500',
@@ -26,7 +27,7 @@ const IconButtonLink: React.FC<IconButtonLinkProps> = ({
     >
       {icon}
       <span>{children}</span>
-    </a>
+    </Link>
   );
 };
 
