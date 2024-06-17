@@ -1,8 +1,9 @@
 // components/ui/SignInButton.tsx
 import React from 'react';
-import firebase from '@/app/lib/firebase'; // Ensure this path is correct
-// import firebase from 'firebase/compat/app';
+import firebase from '@/app/lib/firebase';
 import 'firebase/compat/auth';
+import IconButton from '../slimSim/iconButton';
+import { LogInIcon } from 'lucide-react';
 
 const SignInButton = () => {
   const signInWithGoogle = async () => {
@@ -15,12 +16,9 @@ const SignInButton = () => {
   };
 
   return (
-    <button
-      onClick={signInWithGoogle}
-      className="rounded bg-blue-500 px-4 py-2 text-white"
-    >
-      Sign in with Google
-    </button>
+    <IconButton icon={<LogInIcon></LogInIcon>} onClick={signInWithGoogle}>
+      Sign in
+    </IconButton>
   );
 };
 
