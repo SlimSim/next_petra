@@ -1,4 +1,4 @@
-// lib/useAuth.js
+// app/lib/useAuth.ts
 import { useState, useEffect } from 'react';
 import firebase from './firebase';
 

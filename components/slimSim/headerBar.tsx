@@ -24,15 +24,15 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ top, bottom, showBottom }) => {
     <>
       <div
         className={cn(
-          `sticky -top-2 z-20 flex shrink-0 flex-col content-start items-start justify-start rounded-t-lg bg-yellow-500 p-4 pb-0 md:h-20`,
+          `sticky -top-2 z-20 shrink-0 content-start items-start justify-start rounded-t-lg bg-yellow-500 p-4 pb-0 md:h-20`,
           { 'z-30': !showBottom },
         )}
       >
-        <p
-          className={`place-self-start text-xl text-gray-800 md:text-3xl md:leading-normal`}
+        <div
+          className={`flex flex-row place-self-start p-0 text-xl text-gray-800 md:text-3xl md:leading-normal`}
         >
           {top}
-        </p>
+        </div>
       </div>
       <div className="sticky top-0 z-20 flex shrink-0 flex-row content-start items-center rounded-b-lg bg-yellow-500 p-0 pl-4 align-middle shadow-md md:h-32">
         {bottom}

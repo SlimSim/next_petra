@@ -12,12 +12,29 @@ import {
 import { timeToDisp, timeToMinutesAndSeconds } from '@/lib/utils';
 import IconButton from '../slimSim/iconButton';
 import StartWorkoutButton from './startWorkoutButton';
-import { TrashIcon } from 'lucide-react';
+import {
+  Loader2Icon,
+  LoaderIcon,
+  Redo,
+  Redo2Icon,
+  RedoIcon,
+  Repeat,
+  Repeat1Icon,
+  RepeatIcon,
+  ReplaceIcon,
+  RewindIcon,
+  TrashIcon,
+} from 'lucide-react';
 import BottomBar from '../slimSim/bottomBar';
 import { useWorkout } from './hooks/useWorkout';
 import HeaderBar from '../slimSim/headerBar';
 import usePersistentState from './hooks/usePersistentState';
 import { EndWorkoutButton } from './endWorkoutButton';
+import useAuth from '@/app/lib/useAuth';
+import ProfileButton from '../ui/ProfileButton';
+import Popover from '../ui/popover';
+
+import SignOutButton from '../ui/SignOutButton';
 
 interface ClientWrapperProps {
   workouts: Workout[];
@@ -36,6 +53,8 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({
     stopWorkout,
   } = useWorkout();
 
+  const { user } = useAuth();
+
   const [myWorkouts, setMyWorkouts] = usePersistentState<Workout[]>(
     'myWorkouts',
     [],
@@ -50,7 +69,33 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({
         showBottom={!!currentWorkout}
         top={
           <>
-            <strong>Welcome to Petra.</strong> Your personal trainer!
+            <div className="grow">
+              <div className="flex flex-wrap place-self-start">
+                <strong>Welcome to Petra.</strong> Your personal trainer!
+              </div>
+            </div>
+
+            {user && (
+              <Popover
+                className="-mr-4 -mt-4"
+                position="bottom-right"
+                content={
+                  <div className="flex flex-row">
+                    <SignOutButton></SignOutButton>
+                    <IconButton
+                      icon={<RedoIcon></RedoIcon>}
+                      onClick={() => {
+                        window.location.reload();
+                      }}
+                    >
+                      Reload
+                    </IconButton>
+                  </div>
+                }
+              >
+                <ProfileButton className="" />
+              </Popover>
+            )}
           </>
         }
         bottom={

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PlusIcon, SearchIcon, StarIcon, UserIcon } from 'lucide-react';
 import IconButtonLink from './iconButtonLink';
-import SignInOrOut from '../ui/SignInOrOut';
+import SignInButton from '../ui/SignInButton';
 
 const BottomBar: React.FC = () => {
   return (
@@ -16,7 +16,7 @@ const BottomBar: React.FC = () => {
         <IconButtonLink href="/all" icon={<SearchIcon></SearchIcon>}>
           All
         </IconButtonLink>
-        <SignInOrOut />
+        <SignInButton />
       </div>
     </div>
   );
