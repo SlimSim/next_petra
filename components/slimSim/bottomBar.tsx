@@ -1,9 +1,16 @@
 import * as React from 'react';
-import { PlusIcon, RedoIcon, SearchIcon, StarIcon } from 'lucide-react';
+import {
+  FacebookIcon,
+  PlusIcon,
+  RedoIcon,
+  SearchIcon,
+  StarIcon,
+} from 'lucide-react';
 import IconButtonLink from './iconButtonLink';
 import ButtonDrawer from '@/app/ui/ButtonDrawer';
 import IconButton from './iconButton';
 import SignInOrOutButton from '../ui/SignInOrOut';
+import { FaceSmileIcon } from '@heroicons/react/20/solid';
 
 interface ButtomBarProps {
   children?: React.ReactNode;
@@ -11,6 +18,7 @@ interface ButtomBarProps {
 const BottomBar1: React.FC<ButtomBarProps> = ({ children }) => {
   return (
     <ButtonDrawer>
+      {children}
       <IconButtonLink href="/" icon={<StarIcon></StarIcon>}>
         Stared
       </IconButtonLink>
@@ -20,7 +28,6 @@ const BottomBar1: React.FC<ButtomBarProps> = ({ children }) => {
       <IconButtonLink href="/all" icon={<SearchIcon></SearchIcon>}>
         All
       </IconButtonLink>
-      {children}
       <SignInOrOutButton />
       <IconButton
         icon={<RedoIcon></RedoIcon>}
@@ -30,6 +37,9 @@ const BottomBar1: React.FC<ButtomBarProps> = ({ children }) => {
       >
         Reload
       </IconButton>
+      <IconButtonLink href="#" icon={<FacebookIcon></FacebookIcon>}>
+        Facebook
+      </IconButtonLink>
     </ButtonDrawer>
   );
 };
