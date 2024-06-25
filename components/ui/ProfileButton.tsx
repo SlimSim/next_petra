@@ -30,6 +30,7 @@ const UserProfile: React.FC<ProfileBottomProps> = ({ className }) => {
     </div>
     */
 
+    /*
     <IconButton
       className={cn(className)}
       icon={
@@ -39,6 +40,8 @@ const UserProfile: React.FC<ProfileBottomProps> = ({ className }) => {
     >
       {user.displayName}
     </IconButton>
+    */
+    <p>Signed In</p>
   );
 };
 
