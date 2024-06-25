@@ -73,14 +73,15 @@ const ButtonDrawer: React.FC<ButtonDrawerProps> = ({ children }) => {
         {isOpen
           ? React.Children.map(
               children as React.ReactElement[],
-              (child, index) => (
-                <div
-                  key={index}
-                  className="flex w-24 items-center justify-center"
-                >
-                  {child}
-                </div>
-              ),
+              (child, index) =>
+                child && (
+                  <div
+                    key={child.key}
+                    className="flex w-24 items-center justify-center"
+                  >
+                    {child}
+                  </div>
+                ),
             ).concat(
               <div
                 key="toggle"
