@@ -119,7 +119,6 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({
                 <p>{currentExercise}</p>
               </div>
             </div>
-            {currentWorkout && <EndWorkoutButton onEndWorkout={stopWorkout} />}
           </>
         }
       ></HeaderBar>
@@ -158,7 +157,9 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({
         })}
       </div>
 
-      <BottomBar></BottomBar>
+      <BottomBar>
+        {currentWorkout && <EndWorkoutButton onEndWorkout={stopWorkout} />}
+      </BottomBar>
     </>
   );
 };
