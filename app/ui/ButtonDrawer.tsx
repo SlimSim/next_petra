@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import IconButton from '@/components/slimSim/iconButton';
-import { ChevronDown, ChevronUp, DownloadIcon, UploadIcon } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { debounce } from 'lodash';
 import { cn } from '@/lib/utils';
 
@@ -13,28 +13,24 @@ const ButtonDrawer: React.FC<ButtonDrawerProps> = ({ children }) => {
   const [visibleButtons, setVisibleButtons] = useState<React.ReactNode[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const toggleDrawer = () => {
-    setIsOpen(!isOpen);
-  };
-
   const toggleButton = useMemo(
     () => (
       <IconButton
-        onClick={toggleDrawer}
+        onClick={() => setIsOpen(!isOpen)}
         icon={isOpen ? <ChevronDown /> : <ChevronUp />}
         className="transition-transform duration-1000 ease-in-out"
       >
         {isOpen ? 'Shrink' : 'Expand'}
       </IconButton>
     ),
-    [isOpen, toggleDrawer],
+    [isOpen],
   );
 
   useEffect(() => {
     const updateVisibleButtons = () => {
       if (containerRef.current) {
         const containerWidth = containerRef.current.offsetWidth;
-        const buttonWidth = 100; // Assuming each button is 100px or tailwind w-24 wide :)
+        const buttonWidth = 64; // Assuming each button is 64px or tailwind w-16 wide :)
         const maxButtons = Math.floor(containerWidth / buttonWidth);
 
         const childArray = React.Children.toArray(children);
@@ -49,12 +45,12 @@ const ButtonDrawer: React.FC<ButtonDrawerProps> = ({ children }) => {
       }
     };
 
-    const debouncedUpdate = debounce(updateVisibleButtons, 1);
+    const debouncedUpdate = debounce(updateVisibleButtons, 100);
     updateVisibleButtons();
     window.addEventListener('resize', debouncedUpdate);
 
     return () => window.removeEventListener('resize', debouncedUpdate);
-  }, [children, isOpen]);
+  }, [children, isOpen, toggleButton]);
 
   return (
     <div
@@ -66,7 +62,8 @@ const ButtonDrawer: React.FC<ButtonDrawerProps> = ({ children }) => {
       <div
         ref={containerRef}
         className={cn(
-          'flex flex-wrap justify-between transition-all duration-1000 ease-in-out',
+          'flex justify-between transition-all duration-1000 ease-in-out',
+          { 'flex-wrap': isOpen },
           { 'translate-y-0': isOpen },
         )}
       >
@@ -76,8 +73,8 @@ const ButtonDrawer: React.FC<ButtonDrawerProps> = ({ children }) => {
               (child, index) =>
                 child && (
                   <div
-                    key={child.key}
-                    className="flex w-24 items-center justify-center"
+                    key={child.key || index}
+                    className="flex w-16 items-center justify-center"
                   >
                     {child}
                   </div>
@@ -85,7 +82,7 @@ const ButtonDrawer: React.FC<ButtonDrawerProps> = ({ children }) => {
             ).concat(
               <div
                 key="toggle"
-                className="flex w-24 items-center justify-center"
+                className="flex w-16 items-center justify-center"
               >
                 {toggleButton}
               </div>,
@@ -93,7 +90,7 @@ const ButtonDrawer: React.FC<ButtonDrawerProps> = ({ children }) => {
           : visibleButtons.map((child, index) => (
               <div
                 key={index}
-                className="flex w-24 items-center justify-center"
+                className="flex w-16 items-center justify-center"
               >
                 {child}
               </div>
