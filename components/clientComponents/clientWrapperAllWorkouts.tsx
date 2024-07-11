@@ -11,7 +11,6 @@ import {
 } from '../ui/card';
 import { timeToDisp } from '@/lib/utils';
 import IconButton from '../slimSim/iconButton';
-import StartWorkoutButton from './startWorkoutButton';
 import { StarIcon, TrashIcon } from 'lucide-react';
 import BottomBar from '../slimSim/bottomBar';
 import { useWorkout } from './hooks/useWorkout';

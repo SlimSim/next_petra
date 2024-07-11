@@ -63,6 +63,10 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({
     setMyWorkouts(defaultWorkouts);
   }
 
+  const unstarWorkout = (workout: Workout) => {
+    setMyWorkouts(myWorkouts.filter((w) => w.id !== workout.id));
+  };
+
   return (
     <>
       <HeaderBar
@@ -143,7 +147,7 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({
                 ))}
               </CardContent>
               <CardFooter className="flex justify-between">
-                <IconButton onClick={() => {}} icon={<TrashIcon />}>
+                <IconButton onClick={() => {unstarWorkout(workout)}} icon={<TrashIcon />}>
                   Remove
                 </IconButton>
                 <StartWorkoutButton
