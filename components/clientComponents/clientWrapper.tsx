@@ -1,6 +1,7 @@
 'use client';
 
 import { Workout } from '@/app/lib/definitions';
+import { toast, Toaster } from 'sonner';
 import {
   Card,
   CardContent,
@@ -23,7 +24,10 @@ import {
   RepeatIcon,
   ReplaceIcon,
   RewindIcon,
+  StarIcon,
+  TestTubeIcon,
   TrashIcon,
+  TvIcon,
 } from 'lucide-react';
 import BottomBar from '../slimSim/bottomBar';
 import { useWorkout } from './hooks/useWorkout';
@@ -64,7 +68,16 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({
   }
 
   const unstarWorkout = (workout: Workout) => {
-    setMyWorkouts(myWorkouts.filter((w) => w.id !== workout.id));
+    const filterdWorkouts = myWorkouts.filter((w) => w.id !== workout.id);
+    setMyWorkouts(filterdWorkouts);
+    toast(`Workout "${workout.name}" have been un-stared`, {
+    description: `You can find it, and other, in the "all"-section`,
+      action: {
+        label: "Undo",
+        onClick: () => 
+          setMyWorkouts([...filterdWorkouts, workout]),
+      },
+    });
   };
 
   return (
@@ -147,8 +160,8 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({
                 ))}
               </CardContent>
               <CardFooter className="flex justify-between">
-                <IconButton onClick={() => {unstarWorkout(workout)}} icon={<TrashIcon />}>
-                  Remove
+                <IconButton onClick={() => {unstarWorkout(workout)}} icon={<StarIcon />}>
+                  Unstar
                 </IconButton>
                 <StartWorkoutButton
                   onStartWorkout={() => {

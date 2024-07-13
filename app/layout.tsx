@@ -1,4 +1,5 @@
 import '@/app/ui/global.css';
+import { Toaster } from "@/components/ui/sonner"
 
 export default function RootLayout({
   children,
@@ -11,7 +12,10 @@ export default function RootLayout({
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=3"
       ></meta>
-      <body>{children}</body>
+      <body>
+        <main>{children}</main>
+        <Toaster />
+      </body>
     </html>
   );
 }
