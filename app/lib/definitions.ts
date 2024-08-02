@@ -12,7 +12,8 @@ export enum WorkoutType {
   Single = 'Single',
   Double = 'Double',
   Tabatha = 'Tabatha',
-  Stretch = 'Stretch',
+  QuickStretch = 'Quick Stretch',
+  SeriousStretch = 'Serious Stretch',
 }
 
 export type Workout = {

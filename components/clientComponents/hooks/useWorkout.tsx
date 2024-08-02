@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { SpeachInstruction, Timeout, Workout } from '@/app/lib/definitions';
+import { SpeachInstruction, Timeout, Workout, WorkoutType } from '@/app/lib/definitions';
 import {
   workoutToSpeachInstructions,
   timeToMinutes,
@@ -20,15 +20,21 @@ export function useWorkout() {
   const { play, pause, isPlaying, currentTrack } = useAudioPlayerContext();
 
   const startWorkout = (workout: Workout) => {
+    console.log("startWorkout ->")
+    console.log( "startWorkout:", workout);
     pause();
 
     // TODO: hur ska jag här kunna stanna musiken som startades från bottomBar???
 
 
     stopWorkoutSilently();
+
     setCurrentWorkout(workout);
 
     let instructions = workoutToSpeachInstructions(workout);
+
+    console.log("instructions", instructions);
+
 
     say(
       `Lets do the ${workout.name} for ${timeToMinutes(
@@ -45,7 +51,13 @@ export function useWorkout() {
         workoutRun(currentIndex, instructions, workout.time);
       }, 5000),
     );
-    play( MUSIC.WORKOUT_MUSIC_PATH );
+    if( workout.type == WorkoutType.QuickStretch || workout.type == WorkoutType.SeriousStretch ) {
+      console.log( "play stretch music" );
+      play( MUSIC.STRETCH_MUSIC_PATH );
+    } else {
+      console.log( "play workout music" );
+      play( MUSIC.WORKOUT_MUSIC_PATH );
+    }
   };
 
   const workoutRun = (
@@ -204,6 +216,7 @@ export function useWorkout() {
       console.error('Google US English voice not found.');
     }
     speechSynthesis.speak(utterance);
+    console.log( "say " + text );
   };
 
   useEffect(preparePetra, []);
