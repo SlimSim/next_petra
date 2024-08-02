@@ -70,9 +70,45 @@ export function workoutToSpeachInstructions(
     case WorkoutType.QuickStretch: {
       return toQuickStretchSpeachInstructions(workout);
     }
+    case WorkoutType.Tabatha: {
+      return toTabataWorkoutSpeachInstructions(workout);
+    }
   }
   console.error("unknown workout type for workout ", workout );
   return [];
+}
+
+function toTabataWorkoutSpeachInstructions(
+  workout: Workout,
+): SpeachInstruction[] {
+
+  let si: SpeachInstruction[] = [];
+
+  const stretchTime = 16;
+  const tabataLength = 20;
+  const restLength = 10;
+  const tenseTime = 8;
+  workout.exercises.forEach(excercise => {
+    si.push( { name : "The first " + excercise, time: tabataLength } );
+    si.push( { name : 'pause', time: restLength } );
+    si.push( { name : "The second " + excercise, time: tabataLength } );
+    si.push( { name : 'pause', time: restLength } );
+    si.push( { name : "The third " + excercise, time: tabataLength } );
+    si.push( { name : 'pause', time: restLength } );
+    si.push( { name : "The fourth " + excercise, time: tabataLength } );
+    si.push( { name : 'pause', time: restLength } );
+    si.push( { name : "The fifth " + excercise, time: tabataLength } );
+    si.push( { name : 'pause', time: restLength } );
+    si.push( { name : "The sixth " + excercise, time: tabataLength } );
+    si.push( { name : 'pause', time: restLength } );
+    si.push( { name : "The seventh " + excercise, time: tabataLength } );
+    si.push( { name : 'pause', time: restLength } );
+    si.push( { name : "The eight " + excercise, time: tabataLength } );
+    si.push( { name : 'pause', time: restLength } );
+
+  });
+  si.pop();
+  return si;
 }
 
 function toQuickStretchSpeachInstructions(
