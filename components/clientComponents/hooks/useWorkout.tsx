@@ -20,21 +20,12 @@ export function useWorkout() {
   const { play, pause, isPlaying, currentTrack } = useAudioPlayerContext();
 
   const startWorkout = (workout: Workout) => {
-    console.log("startWorkout ->")
-    console.log( "startWorkout:", workout);
     pause();
-
-    // TODO: hur ska jag här kunna stanna musiken som startades från bottomBar???
-
-
     stopWorkoutSilently();
 
     setCurrentWorkout(workout);
 
     let instructions = workoutToSpeachInstructions(workout);
-
-    console.log("instructions", instructions);
-
 
     say(
       `Lets do the ${workout.name} for ${timeToMinutes(
@@ -52,10 +43,8 @@ export function useWorkout() {
       }, 5000),
     );
     if( workout.type == WorkoutType.QuickStretch || workout.type == WorkoutType.SeriousStretch ) {
-      console.log( "play stretch music" );
       play( MUSIC.STRETCH_MUSIC_PATH );
     } else {
-      console.log( "play workout music" );
       play( MUSIC.WORKOUT_MUSIC_PATH );
     }
   };
@@ -156,7 +145,7 @@ export function useWorkout() {
   ) => {
     switch (localCurrentTime) {
       case totalExcerciseTime:
-        say(`Lets do some ${excersise}`);
+        say(`Lets do ${addSome(excersise)}`);
         break;
       case halftime:
         say(`Halftime`);
@@ -178,6 +167,13 @@ export function useWorkout() {
     }
   };
 
+  const addSome = (excersise: string) => {
+    if( excersise.toLowerCase().startsWith( "the" ) ) {
+      return excersise;
+    }
+    return "some " + excersise;
+  };
+
   const sayPause = (
     localCurrentTime: number,
     totalExcerciseTime: number,
@@ -186,8 +182,9 @@ export function useWorkout() {
   ) => {
     switch (localCurrentTime) {
       case totalExcerciseTime:
+
         say(
-          `Lets pause for ${pauseTime} seconds, then will do some ${nextExcersise}`,
+          `Lets pause for ${pauseTime} seconds, then will do ${addSome(nextExcersise)}`,
         );
         break;
       case 1:
@@ -216,7 +213,6 @@ export function useWorkout() {
       console.error('Google US English voice not found.');
     }
     speechSynthesis.speak(utterance);
-    console.log( "say " + text );
   };
 
   useEffect(preparePetra, []);
