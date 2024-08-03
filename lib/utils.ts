@@ -20,7 +20,10 @@ export function workoutToTime(type: WorkoutType, exercises: string[]):number {
       return (45+45+30+30+15)*(exercises.length-1)/2 + 45+30;
     }
     case WorkoutType.SeriousStretch: {
-      return 68 * exercises.length - 4; //16*3(workout) + 2*8(pause) + 4(för byte)
+      return 68 * exercises.length - 4; // 16*3(workout) + 2*8(pause) + 4(för byte)
+    }
+    case WorkoutType.Tabatha: {
+      return 240 * exercises.length - 10; // 30 * nrWorkouts * 8 - 10;;
     }
   }
   return exercises.length;
