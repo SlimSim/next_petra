@@ -123,11 +123,10 @@ const ClientWrapper: React.FC<ClientWrapperProps> = ({
                 <p>{currentWorkout?.type} &nbsp; &nbsp;</p>
                 <p>
                   {currentWorkout &&
-                    timeToMinutesAndSeconds(
-                      currentTimeLeft as unknown as number,
-                    ) +
-                      '/' +
-                      timeToDisp(currentWorkout.time)}
+                    timeToMinutesAndSeconds( currentWorkoutTimeLeft ) +
+                    '/' +
+                    timeToDisp(currentWorkout.time)
+                  }
                 </p>
               </div>
               <div className="flex flex-wrap place-self-start md:text-3xl">
